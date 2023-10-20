@@ -3,7 +3,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import * as bcrypt from 'bcryptjs'
 import { Pool } from 'pg'
 import * as dotenv from 'dotenv';
-import { JwtOptions } from './jwt.options';
+import { JwtOptions } from '../jwt/jwt.options';
+import { JwtService } from '../jwt/jwt.service';
 dotenv.config();
 
 const pool = new Pool({
@@ -16,6 +17,8 @@ const pool = new Pool({
   
 @Injectable()
 export class AuthService {
+
+  constructor(private jwtService: JwtService) {}
 
     async login(userDto: CreateUserDto) {
         const user = await this.validateUser(userDto)
@@ -45,7 +48,7 @@ export class AuthService {
         }
     }
 
-    async getUserByEmail(email: string) {
+    private async getUserByEmail(email: string) {
         const client = await pool.connect();
         try {
             const result = await client.query(`
@@ -80,56 +83,15 @@ export class AuthService {
     private async generateToken(user: CreateUserDto) {
         const payload = {email: user.email}
         const secret = process.env.SECRET_KEY
+        
         const options: JwtOptions = {
           expiresIn: 7200,
           secret: process.env.SECRET_KEY
         }
-        console.log(options);
-        
-        const token = this.sign(payload, secret, options)
+    
+        const token = this.jwtService.sign(payload, secret, options)
         return {
             access_token: token
         }
-    }
-
-    private sign(payload: object, secret: string, options?: JwtOptions): string {
-
-      const now = Math.floor(Date.now() / 1000);
-      const iat = now;
-      const exp = now + (options?.expiresIn || 3600)
-
-      const updatedPayload = {
-        ...payload,
-        iat,
-        exp
-      };
-
-      const payloadString = JSON.stringify(updatedPayload);
-      const encodedPayload = this.base64UrlEncode(payloadString);
- 
-      const header = {
-          alg: "HS256",
-          typ: "JWT"
-      };
-
-      const headerString = JSON.stringify(header);
-      const encodedHeader = this.base64UrlEncode(headerString);
-      const signature = this.createSignature(encodedHeader + "." + encodedPayload, secret);
-      const encodedSignature = this.base64UrlEncode(signature)
-      const signedToken = `${encodedHeader}.${encodedPayload}.${encodedSignature}`;
-      return signedToken
-    }
-
-    private base64UrlEncode(str) {
-      let base64 = Buffer.from(str).toString("base64");
-      let base64Url = base64.replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/g, "");
-      return base64Url;
-    }
-
-    private createSignature(data, secret) {
-      const crypto = require("crypto");
-      const hmac = crypto.createHmac("sha256", secret);
-      hmac.update(data);
-      return hmac.digest("base64");
     }
 }
