@@ -13,7 +13,7 @@ The system will provide customers with complete information and a list of clothi
     + [Auth](#a)
     + [Clothing](#c)
     + [Users](#u)
-    + [Roles](#r)
+    + [Orders](#or)
 * [Install and run app](#i)
 
 
@@ -208,34 +208,11 @@ Request: POST clothing - create new items in store, this endpoint avalible only 
 
 ###### Endpoint users/role 
 
-Request: POST users/role - add role
-
-```
-{
-  "value": "ADMIN",
-  "userId": 1
-}
-```
-
-    Response: 
-
-    HTTP/1.1 200 OK
-    Content-Type: application/json
-
-    HTTP/1.1 400 Bad Request
-    Content-Type: application/json
-
-    {
-        "error": "no user with such id"
-    }
-
-###### Endpoint users/role 
-
 Request: PUT users/role - change role
 
 ```
 {
-  "value": "USER",
+  "role": "USER",
   "userId": 1
 }
 ```
@@ -249,19 +226,27 @@ Request: PUT users/role - change role
     Content-Type: application/json
 
     {
-        "error": "no user with such id"
+        "error": "invalid role value"
     }
 
-##### <a id="r">Roles</a>
+    HTTP/1.1 404 Not Found
+    Content-Type: application/json
 
-###### Endpoint roles
+    {
+        "error": "user not found"
+    }
 
-Request: POST roles - create role
+##### <a id="or">Orders</a>
+
+###### Endpoint orders
+
+Request: POST orders - create an order
 
 ```
 {
-  "value": "ADMIN",
-  "description": "administrator"
+    "userId": 1,
+    "items": [clothId1, clothId2]
+    "totalPrice": 100
 }
 ```
 
@@ -271,14 +256,50 @@ Request: POST roles - create role
     Content-Type: application/json
 
     {
-        "id": 1,
-        "value": "ADMIN",
-        "description": "administrator"
+        "id": 1
+        "userId": 1,
+        "items": [clothId1, clothId2]
+        "totalPrice": 100
     }
 
-###### Endpoint roles/:value
+    HTTP/1.1 400 Bad Request
+    Content-Type: application/json
 
-Request: GET roles/:value - get role by value
+    {
+        "error": "bad request"
+    }
+
+###### Endpoint orders
+
+Request: Get orders - get all existing orders, endpoint avalible only for administrators
+
+
+    Response: 
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    [
+        {
+            "id": 1
+            "userId": 1,
+            "items": [clothId1, clothId2]
+            "totalPrice": 100
+            "createdAt": 2023-10-25
+        }
+    ]
+
+    HTTP/1.1 403 Forbidden
+    Content-Type: application/json
+
+    {
+        "error": "forbidden"
+    }
+
+###### Endpoint orders/:id
+
+Request: Get orders/:id - get order by id, endpoint avalible only for administrators
+
 
     Response: 
 
@@ -286,17 +307,21 @@ Request: GET roles/:value - get role by value
     Content-Type: application/json
 
     {
-        "id": 1,
-        "value": "ADMIN",
-        "description": "admin"
+        "id": 1
+        "userId": 1,
+        "items": [clothId1, clothId2]
+        "totalPrice": 100
+        "createdAt": 2023-10-25
     }
 
-    HTTP/1.1 404 Not Found
+
+    HTTP/1.1 403 Forbidden
     Content-Type: application/json
 
     {
-        "error": "role does not exist"
+        "error": "forbidden"
     }
+
 
 ## <a id="i">Install</a>
 
