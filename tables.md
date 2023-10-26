@@ -47,3 +47,5 @@
 
 * User can have multiple orders associated with them (one-to-many) at Orders(userId)
 * Item of cloth can be in multiple orders and in one order can be multiple items of clothing (many-to-many) at Cloth_order (clothId, orderId)
+
+![schema](/docks.png "tables-schema")
