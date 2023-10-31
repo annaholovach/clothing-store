@@ -20,9 +20,10 @@ export class ClothingService {
     constructor(private fileService: FilesService) {}
 
     async create(dto: CreateClothingDto, image: any) {
+        if(!dto.title || !dto.size || !dto.price) {
+            throw new HttpException('input cant be empty', HttpStatus.BAD_REQUEST)
+        }
         const fileName = await this.fileService.createFile(image)
-        console.log(fileName);
-        
         const client = await pool.connect()
         try {
             const query = `
