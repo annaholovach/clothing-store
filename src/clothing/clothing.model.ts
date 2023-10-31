@@ -2,7 +2,7 @@ import { Pool } from 'pg'
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-export async function createConnectionAndTableUsers(host, port, database, user, password) {
+export async function createConnectionAndTableClothing(host, port, database, user, password) {
   const pool = new Pool({
     host: process.env.POSTGRES_HOST,
     port: process.env.POSTGRES_PORT,
@@ -15,16 +15,19 @@ export async function createConnectionAndTableUsers(host, port, database, user, 
 
   try {
       await client.query(`
-          CREATE TABLE IF NOT EXISTS users (
+          CREATE TABLE IF NOT EXISTS clothing (
               id SERIAL PRIMARY KEY,
-              email VARCHAR(255) NOT NULL,
-              password VARCHAR(255) NOT NULL
+              title VARCHAR(255) NOT NULL,
+              size VARCHAR(255) NOT NULL,
+              price INTEGER NOT NULL,
+              description VARCHAR(255),
+              image VARCHAR(255)
           )
       `);
 
-      console.log("Connection and table users created successfully.");
+      console.log("Connection and table clothing created successfully.");
   } catch (error) {
-      console.error("Error creating connection and table users:", error);
+      console.error("Error creating connection and table clothing:", error);
   } finally {
       client.release();
   }
