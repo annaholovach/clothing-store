@@ -5,7 +5,6 @@ BEGIN
     END IF;
 END $$;
 
--- Остальной код для создания таблиц и ENUM
 -- clothing
 CREATE TABLE IF NOT EXISTS clothing (
   id SERIAL PRIMARY KEY,
@@ -16,7 +15,6 @@ CREATE TABLE IF NOT EXISTS clothing (
   image VARCHAR(255)
 );
 
--- Проверка существования типа "user_role", и создание, если не существует
 DO $$ 
 BEGIN
     IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role') THEN

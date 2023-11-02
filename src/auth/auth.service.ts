@@ -81,7 +81,9 @@ export class AuthService {
     }
 
     private async generateToken(user: CreateUserDto) {
-        const payload = {email: user.email}
+        const candidate = await this.getUserByEmail(user.email)
+        const userRows = candidate.rows[0]
+        const payload = {id: userRows.id, email: user.email, role: userRows.role}
         const secret = process.env.SECRET_KEY
         
         const options: JwtOptions = {
