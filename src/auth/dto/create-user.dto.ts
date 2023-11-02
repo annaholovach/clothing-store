@@ -3,7 +3,7 @@ import {IsEmail, IsString, Length} from "@nestjs/class-validator";
 export class CreateUserDto {
 
     @IsString({message: 'Only string values'})
-    @IsEmail({}, {message: "Incorrect email"})
+    // @IsEmail({}, {message: "Incorrect email"})
     readonly email: string;
 
     @IsString({message: 'Only string values'})

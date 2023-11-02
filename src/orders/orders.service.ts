@@ -2,6 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create.order.dto';
 import * as dotenv from 'dotenv';
 import { Pool } from 'pg'
+import { UsersService } from 'src/users/users.service';
 dotenv.config();
 
 const pool = new Pool({
@@ -14,6 +15,8 @@ const pool = new Pool({
 
 @Injectable()
 export class OrdersService {
+
+    constructor(private usersSevice: UsersService) {}
 
     async getAll() {
         const client = await pool.connect()
@@ -61,6 +64,10 @@ export class OrdersService {
     async create (dto: CreateOrderDto) {
         const client = await pool.connect()
         try {
+            const user = await this.usersSevice.getOne(dto.userId)
+            if (!user) {
+                throw new HttpException('user does not exist', HttpStatus.BAD_REQUEST)
+            }
             const countItems = dto.items.length
             const totalPrice = await this.countTotalPrice(dto.items)
 

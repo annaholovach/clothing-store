@@ -3,9 +3,8 @@ import { AuthModule } from './auth/auth.module';
 import { ClothingModule } from './clothing/clothing.module';
 import { FilesModule } from './files/files.module';
 import {ServeStaticModule} from "@nestjs/serve-static";
-import { OrdersController } from './orders/orders.controller';
-import { OrdersService } from './orders/orders.service';
 import { OrdersModule } from './orders/orders.module';
+import { UsersModule } from './users/users.module';
 import * as path from 'path';
 
 @Module({
@@ -17,8 +16,9 @@ import * as path from 'path';
     ClothingModule,
     FilesModule,
     OrdersModule,
+    UsersModule,
   ],
-  controllers: [OrdersController],
-  providers: [OrdersService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}
