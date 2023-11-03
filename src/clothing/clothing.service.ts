@@ -3,7 +3,6 @@ import * as dotenv from 'dotenv';
 import { Pool } from 'pg'
 import { CreateClothingDto } from './dto/create.clothing.dto';
 import { FilesService } from '../files/files.service';
-import { log } from 'util';
 dotenv.config();
 
 const pool = new Pool({
