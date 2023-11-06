@@ -286,7 +286,7 @@ Request: GET users/:id - get user by id avalible only for administrators
 
 ###### Endpoint orders
 
-Request: POST orders - create an order
+Request: POST orders - create an order, only authorized users can create orders
 
 ```
 {
