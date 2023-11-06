@@ -174,7 +174,7 @@ Request: GET clothing/search - find clothing by size
 
 ###### Endpoint clothing
 
-Request: POST clothing - create new items in store, this endpoint avalible only for admins
+Request: POST clothing - create new items in store, this endpoint avalible only for admins and moderators
 
 ```
 {
@@ -208,7 +208,7 @@ Request: POST clothing - create new items in store, this endpoint avalible only 
 
 ###### Endpoint users/role 
 
-Request: PUT users/role - change role
+Request: PUT users/role - change role avalible only for administrators
 
 ```
 {
@@ -236,6 +236,52 @@ Request: PUT users/role - change role
         "error": "user not found"
     }
 
+###### Endpoint users
+
+Request: users - get all users avalible only for administrators
+
+    Response: 
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    [
+        {
+            "id": 1,
+            "email": "email",
+            "role": "user"
+        }
+    ]
+
+    HTTP/1.1 403 Forbidden
+    Content-Type: application/json
+
+    {
+        "error": "forbidden"
+    }
+
+###### Endpoint users/:id
+
+Request: GET users/:id - get user by id avalible only for administrators
+
+    Response: 
+
+    HTTP/1.1 200 OK
+    Content-Type: application/json
+
+    {
+        "id": 1,
+        "email": "email",
+        "role": "user"
+    }
+
+    HTTP/1.1 403 Forbidden
+    Content-Type: application/json
+
+    {
+        "error": "forbidden"
+    }
+
 ##### <a id="or">Orders</a>
 
 ###### Endpoint orders
@@ -244,9 +290,10 @@ Request: POST orders - create an order
 
 ```
 {
-    "userId": 1,
-    "items": [clothId1, clothId2]
-    "totalPrice": 100
+    {
+        "userId": 1,
+        "items": [{ "cloth_id": 1, "amount": 3 }]
+    }
 }
 ```
 
@@ -271,7 +318,7 @@ Request: POST orders - create an order
 
 ###### Endpoint orders
 
-Request: Get orders - get all existing orders, endpoint avalible only for administrators
+Request: Get orders - get all existing orders, endpoint avalible only for administrators and moderators
 
 
     Response: 
@@ -298,7 +345,7 @@ Request: Get orders - get all existing orders, endpoint avalible only for admini
 
 ###### Endpoint orders/:id
 
-Request: Get orders/:id - get order by id, endpoint avalible only for administrators
+Request: Get orders/:id - get order by id, endpoint avalible only for administrators and moderators
 
 
     Response: 
