@@ -30,7 +30,7 @@ export class AuthService {
           throw new HttpException('Prorerty email or password cant be empty', HttpStatus.BAD_REQUEST)
         }
         const candidate = await this.getUserByEmail(userDto.email)
-        if (!!candidate) {
+        if (candidate) {
             throw new HttpException('User with such email is already exist', HttpStatus.BAD_REQUEST)
         }
         const hashPassword = await bcrypt.hash(userDto.password, 5)
