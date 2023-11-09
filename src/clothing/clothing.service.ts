@@ -20,16 +20,23 @@ export class ClothingService {
         const query = `
           INSERT INTO clothing (title, size, price, description, image)
           VALUES ($1, $2, $3, $4, $5)
-          RETURNING *
+          RETURNING id, title, size, price, description, image
         `
         const params = [dto.title, dto.size, dto.price, dto.description, fileName]
-        return await this.databaseService.executeQuery(query, params)
+        const result = await this.databaseService.executeQuery(query, params)
+        return result[0]
     }
 
     async getAll(count = 10, offset = 0) {
-      const query = 'SELECT id, title, size, price, description, image FROM clothing';
-      const result = await this.databaseService.executeQuery(query)
-      return result.slice(Number(offset), Number(offset) + Number(count));
+      const query = `
+        SELECT id, title, size, price, description, image 
+        FROM clothing
+        LIMIT $1
+        OFFSET $2    
+      `;
+      const params = [count, offset]
+      const result = await this.databaseService.executeQuery(query, params)
+      return result;
     }
 
     async getById(id: number) {

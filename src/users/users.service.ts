@@ -23,14 +23,14 @@ export class UsersService {
         if (result.length > 0) {
           return result[0]
         } else {
-          throw new HttpException('user with such id does not exist', HttpStatus.BAD_REQUEST)
+          throw new HttpException('user with such id does not exist', HttpStatus.NOT_FOUND)
         }
     }
 
     async changeRole(dto: ChangeRoleDto) {
         const user = await this.getOne(dto.userId)
         if (!user) {
-          throw new HttpException('user with such id does not exist', HttpStatus.BAD_REQUEST)
+          throw new HttpException('user with such id does not exist', HttpStatus.NOT_FOUND)
         }
         const query = 'UPDATE users SET role = $1 WHERE id = $2'
         const values = [dto.role, dto.userId];

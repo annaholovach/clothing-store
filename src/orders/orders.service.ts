@@ -45,7 +45,7 @@ export class OrdersService {
     async create (dto: CreateOrderDto) {
         const user = await this.usersSevice.getOne(dto.userId)
         if (!user) {
-            throw new HttpException('user does not exist', HttpStatus.BAD_REQUEST)
+            throw new HttpException('user does not exist', HttpStatus.NOT_FOUND)
         }
         const countItems = dto.items.length
         const totalPrice = await this.countTotalPrice(dto.items)
