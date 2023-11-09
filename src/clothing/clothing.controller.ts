@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Query, UploadedFile, UseInterceptors, ParseIntPipe, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UploadedFile, UseInterceptors, ParseIntPipe, UseGuards, Delete } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { ClothingService } from './clothing.service';
 import { CreateClothingDto } from './dto/create.clothing.dto';
@@ -34,6 +34,13 @@ export class ClothingController {
     create(@Body() dto: CreateClothingDto,
            @UploadedFile() image) {
         return this.clothingService.create(dto, image)
+    }
+
+    @Roles(['admin', 'moderator'])
+    @UseGuards(RolesGuard)
+    @Delete('/:id')
+    deleteById(@Param('id') id: number) {
+        return this.clothingService.deleteById(id)
     }
 
 }

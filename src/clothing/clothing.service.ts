@@ -51,4 +51,18 @@ export class ClothingService {
       }
       return result
     }
+
+    async deleteById(id: number) {
+        const product = await this.getById(id)
+        if (!product) {
+          throw new HttpException('not found clothing such size', HttpStatus.NOT_FOUND)
+        }
+        const query = `
+          DELETE FROM clothing
+          WHERE id = $1
+        `;
+        const params = [id];
+        await this.databaseService.executeQuery(query, params)
+        return `Clothing with id: ${id} deleted successful`
+    }
 }
