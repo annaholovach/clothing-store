@@ -55,7 +55,7 @@ export class ClothingService {
     async deleteById(id: number) {
         const product = await this.getById(id)
         if (!product) {
-          throw new HttpException('not found clothing such size', HttpStatus.NOT_FOUND)
+          throw new HttpException('not found clothing with such id', HttpStatus.NOT_FOUND)
         }
         const query = `
           DELETE FROM clothing
