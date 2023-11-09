@@ -1,64 +1,45 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
-import { Pool } from 'pg'
 import { ChangeRoleDto } from './dto/change.role.dto';
+import { DbService } from '../db/db.service';
 dotenv.config();
-
-const pool = new Pool({
-    host: process.env.POSTGRES_HOST,
-    port: process.env.POSTGRES_PORT,
-    database: process.env.POSTGRES_DB,
-    user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-});
 
 @Injectable()
 export class UsersService {
 
+  constructor(private readonly databaseService: DbService) {}
+
     async getAll() {
-        const client = await pool.connect()
-        try {
-            const query = 'SELECT id, email, role FROM users';
-            const result = await client.query(query)
-            return result.rows;
-          } finally {
-            client.release();
-          }
+        const query = 'SELECT id, email, role FROM users';
+        const result = await this.databaseService.executeQuery(query)
+        return result;
     }
 
     async getOne(id: number) {
-        const client = await pool.connect()
-        try {
-            const query = 'SELECT id, email, role FROM users WHERE id = $1'
-            const values = [id]
-            const result = await client.query(query, values)
+        const query = 'SELECT id, email, role FROM users WHERE id = $1'
+        const values = [id]
+        const result = await this.databaseService.executeQuery(query, values)
       
-            if (result.rows.length > 0) {
-              return result.rows[0]
-            } else {
-              throw new HttpException('user with such id does not exist', HttpStatus.BAD_REQUEST)
-            }
-        } finally {
-            client.release();
+        if (result.length > 0) {
+          return result[0]
+        } else {
+          throw new HttpException('user with such id does not exist', HttpStatus.BAD_REQUEST)
         }
     }
 
     async changeRole(dto: ChangeRoleDto) {
-        const client = await pool.connect()
         const user = await this.getOne(dto.userId)
         if (!user) {
           throw new HttpException('user with such id does not exist', HttpStatus.BAD_REQUEST)
         }
-        try {
-          const query = 'UPDATE users SET role = $1 WHERE id = $2'
-          const values = [dto.role, dto.userId];
+        const query = 'UPDATE users SET role = $1 WHERE id = $2'
+        const values = [dto.role, dto.userId];
 
-          await client.query(query, values);
+        try{
+          await this.databaseService.executeQuery(query, values);
           return 'User role changed successfully'
         } catch (error) {
           throw new HttpException('Failed to change user role', HttpStatus.INTERNAL_SERVER_ERROR);
-        } finally {
-          client.release()
         }
     }
 }

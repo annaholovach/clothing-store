@@ -7,6 +7,8 @@ import { OrdersModule } from './orders/orders.module';
 import { UsersModule } from './users/users.module';
 import * as path from 'path';
 import { ConfigModule } from '@nestjs/config';
+import { DbService } from './db/db.service';
+import { DbModule } from './db/db.module';
 
 @Module({
   imports: [
@@ -21,8 +23,9 @@ import { ConfigModule } from '@nestjs/config';
     FilesModule,
     OrdersModule,
     UsersModule,
+    DbModule,
   ],
   controllers: [],
-  providers: [],
+  providers: [DbService],
 })
 export class AppModule {}
