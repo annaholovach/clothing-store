@@ -93,7 +93,7 @@ export class OrdersService {
             const pricePerUnit = result[0].price;
             return pricePerUnit;
         } else {
-            throw new HttpException('not foud clothing with such id', HttpStatus.BAD_REQUEST)
+            throw new HttpException('not foud clothing with such id', HttpStatus.NOT_FOUND)
         }
     }
 
