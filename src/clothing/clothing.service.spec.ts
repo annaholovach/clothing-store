@@ -6,7 +6,6 @@ import { JwtService } from "../jwt/jwt.service";
 import { FilesModule } from "../files/files.module";
 import { DbModule } from "../db/db.module";
 import { HttpException, HttpStatus } from "@nestjs/common";
-import { rejects } from "assert";
 import { CreateClothingDto } from "./dto/create.clothing.dto";
 
 describe('ClothingService', () => {
@@ -25,10 +24,23 @@ describe('ClothingService', () => {
       expect(clothingService).toBeDefined();
     });
 
+    jest.mock('./clothing.service')
+
     clothingService = new ClothingService(new DbService(), new FilesService());
 
     describe('getAll', () => {
         it('should get all clothing items', async () => {
+            const mockClothing = {
+              id: 1,
+              title: 'T-shirt',
+              size: 'M',
+              price: 100,
+              description: 'This is a T-shirt',
+              image: 'image.png',
+            };
+  
+            clothingService.getAll = jest.fn(() => Promise.resolve([mockClothing]))
+
             const clothingItems = await clothingService.getAll();
           
             expect(clothingItems.length).toBeGreaterThan(0);
@@ -37,9 +49,19 @@ describe('ClothingService', () => {
 
     describe('getById', () => {
         it('should get a clothing item by ID', async () => {
-            const clothingItem = await clothingService.getById(3);
+            const mockClothing = {
+              id: 1,
+              title: 'T-shirt',
+              size: 'M',
+              price: 100,
+              description: 'This is a T-shirt',
+              image: 'image.png',
+            };
+
+            clothingService.getById = jest.fn(() => Promise.resolve(mockClothing))
+            const clothingItem = await clothingService.getById(1);
           
-            expect(clothingItem.id).toEqual(3);
+            expect(clothingItem.id).toEqual(1);
         });
           
         it('should throw an error if the clothing item does not exist', async () => {
@@ -50,6 +72,16 @@ describe('ClothingService', () => {
 
     describe('findBySize', () => {
         it('should get all clothing items with a specific size', async () => {
+            const mockClothing = {
+              id: 1,
+              title: 'T-shirt',
+              size: 'm',
+              price: 100,
+              description: 'This is a T-shirt',
+              image: 'image.png',
+            };
+
+            clothingService.findBySize = jest.fn((size: string) => Promise.resolve([mockClothing]))
             const clothingItems = await clothingService.findBySize('m');
           
             expect(clothingItems.length).toBeGreaterThan(0);

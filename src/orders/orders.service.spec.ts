@@ -27,14 +27,14 @@ describe('OrdersService', () => {
           const dto = new CreateOrderDto() 
           dto.userId = 1
           dto.items = [
-              { cloth_id: 1, amount: 2 },
+              { cloth_id: 4, amount: 2 },
           ]
         
           const order = await ordersService.create(dto);
         
           expect(order.order_id).toBeGreaterThan(0);
           expect(order.userid).toEqual(1);
-          expect(order.items.length).toEqual(2);
+          expect(order.items.length).toEqual(1);
       });
         
       it('should throw an error if the user does not exist', async () => {
