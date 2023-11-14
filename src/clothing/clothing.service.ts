@@ -1,6 +1,5 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import * as dotenv from 'dotenv';
-import { Pool } from 'pg'
 import { CreateClothingDto } from './dto/create.clothing.dto';
 import { FilesService } from '../files/files.service';
 import { DbService } from '../db/db.service';

@@ -1,7 +1,7 @@
 export class CreateClothingDto {
 
-    readonly title: string;
-    readonly size: string;
-    readonly price: number;
-    readonly description: string;
+    title: string;
+    size: string;
+    price: number;
+    description: string;
 }

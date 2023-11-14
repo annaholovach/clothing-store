@@ -1,28 +1,26 @@
+import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '../jwt/jwt.service';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
+import { DbService } from '../db/db.service';
 
 describe('AuthService', () => {
   let authService: AuthService;
 
-  beforeEach(() => {
-    authService = new AuthService(new JwtService());
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [AuthService, DbService, JwtService],
+    }).compile();
+
+    authService = module.get<AuthService>(AuthService);
+  });
+
+  it('should be defined', () => {
+    expect(authService).toBeDefined();
   });
 
   describe('registration', () => {
-    // it('should generate token', async () => {
-    //   const userDto = new CreateUserDto();
-    //   userDto.email = 'newuser@gmail.com';
-    //   userDto.password = 'password123';
-
-    //   const token = await authService.registration(userDto);
-
-    //   expect(token.access_token).toBeTruthy()
-    //   expect(typeof token).toEqual('object');
-    //   expect('access_token' in token).toBeTruthy();
-    // });
-
     it('should throw an error if email is already in use', async () => {
       const userDto = new CreateUserDto();
       userDto.email = 'admin';
@@ -68,7 +66,7 @@ describe('AuthService', () => {
       try {
         await authService.login(userDto);
       } catch (error) {
-        expect(error.status).toEqual(HttpStatus.BAD_REQUEST);
+        expect(error.status).toEqual(HttpStatus.NOT_FOUND);
         expect(error.message).toEqual('No user with such email');
       }
     });

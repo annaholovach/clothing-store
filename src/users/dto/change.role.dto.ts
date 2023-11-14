@@ -1,5 +1,5 @@
 export class ChangeRoleDto {
 
-    readonly userId: number;
-    readonly role: string;
+    userId: number;
+    role: string;
 }

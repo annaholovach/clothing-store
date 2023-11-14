@@ -2,9 +2,8 @@ import { Body, Controller, Get, Param, Post, Query, UploadedFile, UseInterceptor
 import { FileInterceptor } from '@nestjs/platform-express/multer';
 import { ClothingService } from './clothing.service';
 import { CreateClothingDto } from './dto/create.clothing.dto';
-import { count } from 'console';
-import { Roles } from 'src/auth/roles-auth.decorator';
-import { RolesGuard } from 'src/auth/roles.guard';
+import { Roles } from '../auth/roles-auth.decorator';
+import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('clothing')
 export class ClothingController {

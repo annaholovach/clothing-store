@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateOrderDto } from './dto/create.order.dto';
 import * as dotenv from 'dotenv';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { DbService } from '../db/db.service';
 dotenv.config();
 
