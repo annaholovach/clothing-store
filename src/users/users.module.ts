@@ -6,12 +6,8 @@ import { DbModule } from '../db/db.module';
 import { DbService } from 'src/db/db.service';
 
 @Module({
-  providers: [
-    UsersService,
-    JwtService,
-    DbService
-  ],
+  providers: [UsersService, JwtService, DbService],
   controllers: [UsersController],
-  imports: [DbModule]
+  imports: [DbModule],
 })
 export class UsersModule {}

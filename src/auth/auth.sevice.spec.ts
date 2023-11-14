@@ -2,7 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '../jwt/jwt.service';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { HttpException, HttpStatus, UnauthorizedException } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { DbService } from '../db/db.service';
 
 describe('AuthService', () => {
@@ -43,7 +47,9 @@ describe('AuthService', () => {
         await authService.registration(userDto);
       } catch (error) {
         expect(error.status).toEqual(HttpStatus.BAD_REQUEST);
-        expect(error.message).toEqual('Password must be at least 4 characters long');
+        expect(error.message).toEqual(
+          'Password must be at least 4 characters long',
+        );
       }
     });
   });

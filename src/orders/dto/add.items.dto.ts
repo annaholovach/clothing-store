@@ -1,4 +1,4 @@
 export class AddItemDto {
-    cloth_id: number;
-    amount: number;
+  cloth_id: number;
+  amount: number;
 }

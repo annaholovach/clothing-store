@@ -1,107 +1,107 @@
-import { Test, TestingModule } from "@nestjs/testing";
-import { OrdersService } from "./orders.service";
-import { UsersService } from "../users/users.service";
-import { JwtService } from "../jwt/jwt.service";
-import { DbService } from "../db/db.service";
-import { CreateOrderDto } from "./dto/create.order.dto";
+import { Test, TestingModule } from '@nestjs/testing';
+import { OrdersService } from './orders.service';
+import { UsersService } from '../users/users.service';
+import { JwtService } from '../jwt/jwt.service';
+import { DbService } from '../db/db.service';
+import { CreateOrderDto } from './dto/create.order.dto';
 
 describe('OrdersService', () => {
-    let ordersService: OrdersService;
-  
-    beforeEach(async () => {
-      const module: TestingModule = await Test.createTestingModule({
-        providers: [OrdersService, UsersService, JwtService, DbService],
-      }).compile();
-  
-      ordersService = module.get<OrdersService>(OrdersService);
-    });
-  
-    it('should be defined', () => {
-      expect(ordersService).toBeDefined();
-    });
+  let ordersService: OrdersService;
 
-    ordersService = new OrdersService(new DbService(), new UsersService(new DbService()))
+  beforeEach(async () => {
+    const module: TestingModule = await Test.createTestingModule({
+      providers: [OrdersService, UsersService, JwtService, DbService],
+    }).compile();
 
-    jest.mock('./orders.service')
+    ordersService = module.get<OrdersService>(OrdersService);
+  });
 
-    describe('create', () => {
-      it('should create a new order', async () => {
-          const dto = new CreateOrderDto() 
-          dto.userId = 1
-          dto.items = [
-              { cloth_id: 4, amount: 2 },
-          ]
+  it('should be defined', () => {
+    expect(ordersService).toBeDefined();
+  });
 
-          ordersService.create = jest.fn(async (dto) => {
-            return {
-              order_id: 123,
-              userid: dto.userId,
-              items: dto.items,
-              totalPrice: 100
-            };
-          });
-        
-          const order = await ordersService.create(dto);
-        
-          expect(order.order_id).toBeGreaterThan(0);
-          expect(order.userid).toEqual(1);
-          expect(order.items.length).toEqual(1);
+  ordersService = new OrdersService(
+    new DbService(),
+    new UsersService(new DbService()),
+  );
+
+  jest.mock('./orders.service');
+
+  describe('create', () => {
+    it('should create a new order', async () => {
+      const dto = new CreateOrderDto();
+      dto.userId = 1;
+      dto.items = [{ cloth_id: 4, amount: 2 }];
+
+      ordersService.create = jest.fn(async (dto) => {
+        return {
+          order_id: 123,
+          userid: dto.userId,
+          items: dto.items,
+          totalPrice: 100,
+        };
       });
-        
-      it('should throw an error if the user does not exist', async () => {
-          const dto = {
-            userId: 100,
-            items: [
-              { cloth_id: 1, amount: 2 },
-              { cloth_id: 2, amount: 1 },
-            ],
-          };
-        
-          await expect(ordersService.create(dto)).rejects.toThrow('user with such id does not exist');
+
+      const order = await ordersService.create(dto);
+
+      expect(order.order_id).toBeGreaterThan(0);
+      expect(order.userid).toEqual(1);
+      expect(order.items.length).toEqual(1);
+    });
+
+    it('should throw an error if the user does not exist', async () => {
+      const dto = {
+        userId: 100,
+        items: [
+          { cloth_id: 1, amount: 2 },
+          { cloth_id: 2, amount: 1 },
+        ],
+      };
+
+      await expect(ordersService.create(dto)).rejects.toThrow(
+        'user with such id does not exist',
+      );
+    });
+  });
+
+  describe('getAll', () => {
+    it('should return all orders', async () => {
+      ordersService.getAll = jest.fn(async () => {
+        return [
+          {
+            order_id: 1,
+            userid: 1,
+            items: [{ cloth_id: 4, amount: 2 }],
+            totalPrice: 100,
+          },
+        ];
       });
-    })
+      const orders = await ordersService.getAll();
 
-    describe('getAll', () => {
-        it('should return all orders', async () => {
-            ordersService.getAll = jest.fn(async () => {
-              return [
-                {
-                  order_id: 1,
-                  userid: 1,
-                  items: [
-                    { cloth_id: 4, amount: 2 },
-                  ],
-                  totalPrice: 100
-                },
-              ];
-            });
-            const orders = await ordersService.getAll();
-          
-            expect(orders.length).toBeGreaterThan(0);
-        });
-    })
+      expect(orders.length).toBeGreaterThan(0);
+    });
+  });
 
-    describe('getOne', () => {
-        it('should return an order with the given ID', async () => {
-            ordersService.getOne = jest.fn(async (id) => {
-              return {
-                id: 1,
-                userid: 1,
-                items: [
-                  { cloth_id: 4, amount: 2 },
-                ],
-                totalPrice: 100
-              };
-            });
-            
-            const order = await ordersService.getOne(1);
-          
-            expect(order.id).toEqual(1);
-          });
-          
-          it('should throw an error if an order with the given ID does not exist', async () => {
-            await expect(ordersService.getOne(100)).rejects.toThrow('order with this id does not exist');
-          });
-    })
+  describe('getOne', () => {
+    it('should return an order with the given ID', async () => {
+      ordersService.getOne = jest.fn(async () => {
+        return {
+          id: 1,
+          userid: 1,
+          items: [{ cloth_id: 4, amount: 2 }],
+          totalPrice: 100,
+        };
+      });
 
-})
+      const order = await ordersService.getOne(1);
+
+      expect(order.id).toEqual(1);
+    });
+
+    it('should throw an error if an order with the given ID does not exist', async () => {
+      await expect(ordersService.getOne(100)).rejects.toThrow(
+        'order with this id does not exist',
+      );
+    });
+  });
+});

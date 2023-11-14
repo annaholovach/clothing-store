@@ -7,26 +7,25 @@ import { RolesGuard } from '../auth/roles.guard';
 
 @Controller('orders')
 export class OrdersController {
+  constructor(private ordersService: OrdersService) {}
 
-    constructor (private ordersService: OrdersService) {}
+  @Roles(['admin', 'moderator'])
+  @UseGuards(RolesGuard)
+  @Get()
+  getAll() {
+    return this.ordersService.getAll();
+  }
 
-    @Roles(['admin', 'moderator'])
-    @UseGuards(RolesGuard)
-    @Get()
-    getAll() {
-        return this.ordersService.getAll()
-    }
+  @Roles(['admin', 'moderator'])
+  @UseGuards(RolesGuard)
+  @Get('/:id')
+  getOne(@Param('id') id: number) {
+    return this.ordersService.getOne(id);
+  }
 
-    @Roles(['admin', 'moderator'])
-    @UseGuards(RolesGuard)
-    @Get('/:id')
-    getOne(@Param('id') id: number) {
-        return this.ordersService.getOne(id)
-    }
-
-    @UseGuards(JwtAuthGuard)
-    @Post()
-    create(@Body() dto: CreateOrderDto) {
-        return this.ordersService.create(dto)
-    }
+  @UseGuards(JwtAuthGuard)
+  @Post()
+  create(@Body() dto: CreateOrderDto) {
+    return this.ordersService.create(dto);
+  }
 }

@@ -1,6 +1,6 @@
-import { AddItemDto } from "./add.items.dto";
+import { AddItemDto } from './add.items.dto';
 
 export class CreateOrderDto {
-    userId: number;
-    items: AddItemDto[];
+  userId: number;
+  items: AddItemDto[];
 }

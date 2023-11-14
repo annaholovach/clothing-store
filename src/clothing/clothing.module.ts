@@ -8,14 +8,7 @@ import { DbService } from 'src/db/db.service';
 
 @Module({
   controllers: [ClothingController],
-  providers: [
-    ClothingService,
-    JwtService,
-    DbService
-  ],
-  imports: [
-    FilesModule,
-    DbModule,
-  ]
+  providers: [ClothingService, JwtService, DbService],
+  imports: [FilesModule, DbModule],
 })
 export class ClothingModule {}

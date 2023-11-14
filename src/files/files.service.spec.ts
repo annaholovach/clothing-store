@@ -1,7 +1,7 @@
 import { FilesService } from './files.service';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import * as path from 'path'
-import * as fs from 'fs'
+import * as path from 'path';
+import * as fs from 'fs';
 import { Test, TestingModule } from '@nestjs/testing';
 
 describe('FilesService', () => {
@@ -38,14 +38,18 @@ describe('FilesService', () => {
         buffer: Buffer.from('something'),
       };
 
-      jest.spyOn(fs, 'writeFileSync').mockImplementation(() => { throw new Error('Error writing file'); });
+      jest.spyOn(fs, 'writeFileSync').mockImplementation(() => {
+        throw new Error('Error writing file');
+      });
 
       try {
         await filesService.createFile(mockFile);
       } catch (error) {
         expect(error).toBeInstanceOf(HttpException);
         expect(error.status).toEqual(HttpStatus.INTERNAL_SERVER_ERROR);
-        expect(error.message).toEqual('an error occured while writing the file');
+        expect(error.message).toEqual(
+          'an error occured while writing the file',
+        );
       }
     });
   });

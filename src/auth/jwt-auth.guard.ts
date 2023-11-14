@@ -1,31 +1,36 @@
-import { CanActivate, ExecutionContext, Injectable, UnauthorizedException } from "@nestjs/common";
-import { JwtService } from "../jwt/jwt.service";
-import { Observable } from "rxjs";
+import {
+  CanActivate,
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
+import { JwtService } from '../jwt/jwt.service';
+import { Observable } from 'rxjs';
 
-const secret = process.env.SECRET_KEY
+const secret = process.env.SECRET_KEY;
 
 @Injectable()
-export class JwtAuthGuard implements CanActivate{
+export class JwtAuthGuard implements CanActivate {
+  constructor(private jwtService: JwtService) {}
 
-    constructor(private jwtService: JwtService) {}
+  canActivate(
+    context: ExecutionContext,
+  ): boolean | Promise<boolean> | Observable<boolean> {
+    const req = context.switchToHttp().getRequest();
+    try {
+      const authHeader = req.headers.authorization;
+      const bearer = authHeader.split(' ')[0];
+      const token = authHeader.split(' ')[1];
 
-    canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-        const req = context.switchToHttp().getRequest()
-        try{
-            const authHeader = req.headers.authorization
-            const bearer = authHeader.split(' ')[0]
-            const token = authHeader.split(' ')[1]
+      if (bearer !== 'Bearer' || !token) {
+        throw new UnauthorizedException({ message: 'user unauthorized' });
+      }
 
-            if(bearer !== 'Bearer' || !token) {
-                throw new UnauthorizedException({message: 'user unauthorized'})
-            }
-
-            const user = this.jwtService.verify(token, secret)
-            req.user = user
-            return true
-        }catch(e){
-            throw new UnauthorizedException({message: 'user unauthorized'})
-        }
+      const user = this.jwtService.verify(token, secret);
+      req.user = user;
+      return true;
+    } catch (e) {
+      throw new UnauthorizedException({ message: 'user unauthorized' });
     }
-
+  }
 }
