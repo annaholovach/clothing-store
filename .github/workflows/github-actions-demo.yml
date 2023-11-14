@@ -28,7 +28,7 @@ jobs:
       - name: build project
         run: npm run build
       - name: run project
-        run: npm run start:dev
+        run: npm run start:dev &
       - name: unit test
         run: npm test
       - name: e2e test
