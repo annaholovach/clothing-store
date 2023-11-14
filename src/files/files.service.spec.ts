@@ -22,7 +22,7 @@ describe('FilesService', () => {
   describe('createFile', () => {
     it('should create a file and return the filename', async () => {
       const mockFile = {
-        buffer: Buffer.from('ahuy'),
+        buffer: Buffer.from('something'),
       };
 
       const fileName = await filesService.createFile(mockFile);
@@ -35,7 +35,7 @@ describe('FilesService', () => {
 
     it('should throw an error if there is an error writing the file', async () => {
       const mockFile = {
-        buffer: Buffer.from('ahuy'),
+        buffer: Buffer.from('something'),
       };
 
       jest.spyOn(fs, 'writeFileSync').mockImplementation(() => { throw new Error('Error writing file'); });

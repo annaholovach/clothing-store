@@ -106,7 +106,7 @@ describe('ClothingService', () => {
             dto.price = 10
             dto.description = 'A white T-shirt'
 
-            const image = {buffer: Buffer.from('ahuy')}           
+            const image = {buffer: Buffer.from('something')}           
           
             const clothing = await clothingService.create(dto, image);
           
@@ -123,7 +123,7 @@ describe('ClothingService', () => {
             dto.price = null
             dto.description = 'A white T-shirt'
 
-            const image = {buffer: Buffer.from('ahuy')}
+            const image = {buffer: Buffer.from('something')}
           
             await expect(clothingService.create(dto, image)).rejects.toThrowError(HttpException);
             await expect(clothingService.create(dto, image)).rejects.toThrowError('input cant be empty');
