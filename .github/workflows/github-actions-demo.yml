@@ -4,6 +4,16 @@ on: [push]
 jobs:
   init:
     runs-on: ubuntu-latest
+        services:
+      postgres:
+        image: postgres:latest
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: root
+          POSTGRES_DB: cloth_store
+        ports:
+          - 5432:5432
+        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
     strategy:
       matrix:
         node-version: [ 16.x ]
@@ -23,15 +33,3 @@ jobs:
         run: npm run test:e2e
       - name: lint code
         run: npm lint
-
-  db:
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Installing postgresql
-        uses: postgres/setup-postgresql@v1
-        with:
-          version: 14.2
-      - name: Creating database
-        run: psql -U postgres -c "CREATE DATABASE cloth_store;"
