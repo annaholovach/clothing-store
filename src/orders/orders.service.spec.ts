@@ -22,6 +22,34 @@ describe('OrdersService', () => {
 
     ordersService = new OrdersService(new DbService(), new UsersService(new DbService()))
 
+    describe('create', () => {
+      it('should create a new order', async () => {
+          const dto = new CreateOrderDto() 
+          dto.userId = 1
+          dto.items = [
+              { cloth_id: 1, amount: 2 },
+          ]
+        
+          const order = await ordersService.create(dto);
+        
+          expect(order.order_id).toBeGreaterThan(0);
+          expect(order.userid).toEqual(1);
+          expect(order.items.length).toEqual(2);
+      });
+        
+      it('should throw an error if the user does not exist', async () => {
+          const dto = {
+            userId: 100,
+            items: [
+              { cloth_id: 1, amount: 2 },
+              { cloth_id: 2, amount: 1 },
+            ],
+          };
+        
+          await expect(ordersService.create(dto)).rejects.toThrow('user with such id does not exist');
+      });
+    })
+
     describe('getAll', () => {
         it('should return all orders', async () => {
             const orders = await ordersService.getAll();
@@ -42,32 +70,4 @@ describe('OrdersService', () => {
           });
     })
 
-    describe('create', () => {
-        it('should create a new order', async () => {
-            const dto = new CreateOrderDto() 
-            dto.userId = 1
-            dto.items = [
-                { cloth_id: 3, amount: 2 },
-                { cloth_id: 4, amount: 1 },
-            ]
-          
-            const order = await ordersService.create(dto);
-          
-            expect(order.order_id).toBeGreaterThan(0);
-            expect(order.userid).toEqual(1);
-            expect(order.items.length).toEqual(2);
-        });
-          
-        it('should throw an error if the user does not exist', async () => {
-            const dto = {
-              userId: 100,
-              items: [
-                { cloth_id: 1, amount: 2 },
-                { cloth_id: 2, amount: 1 },
-              ],
-            };
-          
-            await expect(ordersService.create(dto)).rejects.toThrow('user with such id does not exist');
-        });
-    })
 })
