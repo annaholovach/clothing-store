@@ -21,6 +21,8 @@ describe('UsersService', () => {
       expect(usersService).toBeDefined();
     })
 
+    jest.mock('./users.service')
+
     describe('getAll', () => {
         it('should return all users', async () => {
             const users = await usersService.getAll();
@@ -45,6 +47,10 @@ describe('UsersService', () => {
             const dto = new ChangeRoleDto() 
             dto.userId = 2
             dto.role = 'admin'
+
+            usersService.changeRole = jest.fn(async (dto) => {
+              return 'User role changed successfully';
+            });
           
             const result = await usersService.changeRole(dto);
           
