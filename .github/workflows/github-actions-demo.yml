@@ -32,4 +32,4 @@ jobs:
       - name: unit test
         run: npm test
       - name: lint code
-        run: npm lint
+        run: $HOME/.npm/bin/eslint "src/**/*.ts"
