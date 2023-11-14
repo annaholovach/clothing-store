@@ -24,14 +24,14 @@ jobs:
       - name: lint code
         run: npm lint
 
-  deploy:
+  db:
     runs-on: ubuntu-latest
 
     steps:
       - uses: actions/checkout@v3
-      - name: Installing docker
-        uses: docker/setup-docker@v1
-      - name: Building docker image
-        run: docker-compose build
-      - name: Pushing docker image
-        run: docker-compose up
+      - name: Installing postgresql
+        uses: postgres/setup-postgresql@v1
+        with:
+          version: 14.2
+      - name: Creating database
+        run: psql -U postgres -c "CREATE DATABASE cloth_store;"
