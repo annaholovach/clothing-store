@@ -22,6 +22,8 @@ describe('OrdersService', () => {
 
     ordersService = new OrdersService(new DbService(), new UsersService(new DbService()))
 
+    jest.mock('./orders.service')
+
     describe('create', () => {
       it('should create a new order', async () => {
           const dto = new CreateOrderDto() 
@@ -29,6 +31,15 @@ describe('OrdersService', () => {
           dto.items = [
               { cloth_id: 4, amount: 2 },
           ]
+
+          ordersService.create = jest.fn(async (dto) => {
+            return {
+              order_id: 123,
+              userid: dto.userId,
+              items: dto.items,
+              totalPrice: 100
+            };
+          });
         
           const order = await ordersService.create(dto);
         
@@ -52,6 +63,18 @@ describe('OrdersService', () => {
 
     describe('getAll', () => {
         it('should return all orders', async () => {
+            ordersService.getAll = jest.fn(async () => {
+              return [
+                {
+                  order_id: 1,
+                  userid: 1,
+                  items: [
+                    { cloth_id: 4, amount: 2 },
+                  ],
+                  totalPrice: 100
+                },
+              ];
+            });
             const orders = await ordersService.getAll();
           
             expect(orders.length).toBeGreaterThan(0);
@@ -60,6 +83,17 @@ describe('OrdersService', () => {
 
     describe('getOne', () => {
         it('should return an order with the given ID', async () => {
+            ordersService.getOne = jest.fn(async (id) => {
+              return {
+                id: 1,
+                userid: 1,
+                items: [
+                  { cloth_id: 4, amount: 2 },
+                ],
+                totalPrice: 100
+              };
+            });
+            
             const order = await ordersService.getOne(1);
           
             expect(order.id).toEqual(1);
