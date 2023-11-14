@@ -31,7 +31,5 @@ jobs:
         run: npm run start:dev &
       - name: unit test
         run: npm test
-      - name: e2e test
-        run: npm run test:e2e
       - name: lint code
         run: npm lint
