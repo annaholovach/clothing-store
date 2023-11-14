@@ -23,3 +23,15 @@ jobs:
         run: npm run test:e2e
       - name: lint code
         run: npm lint
+
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Installing docker
+        uses: docker/setup-docker@v1
+      - name: Building docker image
+        run: docker-compose build
+      - name: Pushing docker image
+        run: docker-compose up
